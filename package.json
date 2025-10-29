@@ -9,7 +9,8 @@
     "build": "tsc --build",
     "start": "node ./dist/index.js",
     "clean": "rimraf ./dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "prisma db seed"
   },
   "repository": {
     "type": "git",
@@ -21,13 +22,16 @@
   "author": "raj248",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^6.18.0",
     "bcryptjs": "^3.0.2",
+    "cookie": "^1.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "dotenv-flow": "^4.1.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "prisma": "^6.18.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -37,7 +41,6 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.3.1",
     "nodemon": "^3.1.10",
-    "prisma": "^6.16.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }

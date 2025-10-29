@@ -4,18 +4,29 @@ import morgan from "morgan";
 
 const app: Express = express();
 
-// app.use(cors({
-// origin: '*', // your frontend origin
-// methods: ['GET','POST','PUT','DELETE'],
-// credentials: true
-// }));
+// app.use(
+//   cors({
+//     origin: "*", // your frontend origin
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true,
+//   })
+// );
 
-app.use(cors());
+import authRoute from "./routes/auth.routes";
+
+app.use(
+  cors({
+    origin: true, // or your frontend IP/domain
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
+
+app.use("/api/auth", authRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");

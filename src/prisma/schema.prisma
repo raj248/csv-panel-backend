@@ -7,8 +7,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Unified User table for both admin and regular users
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String      @id @default(cuid())
   name      String?
+  email     String   @unique
   password  String
+  role      Role     @default(USER) // defines admin/user role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relation to CSV files
+  csvFiles  CSVFile[]
+}
+
+// CSV files table
+model CSVFile {
+  id        String      @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  filename    String
+  filepath    String   // store the file path or URL
+  description String? 
+  uploadedAt  DateTime @default(now())
+}
+
+// Role enum
+enum Role {
+  ADMIN
+  USER
 }
