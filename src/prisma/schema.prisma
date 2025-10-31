@@ -9,32 +9,62 @@ datasource db {
 
 // Unified User table for both admin and regular users
 model User {
-  id        String      @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String?
   email     String   @unique
   password  String
-  role      Role     @default(USER) // defines admin/user role
+  role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relation to CSV files
-  csvFiles  CSVFile[]
-}
+  books     Book[]   // relation to books uploaded by user
 
-// CSV files table
-model CSVFile {
-  id        String      @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-
-  filename    String
-  filepath    String   // store the file path or URL
-  description String? 
-  uploadedAt  DateTime @default(now())
+  @@index([email]) // optional, email is already unique
 }
 
 // Role enum
 enum Role {
   ADMIN
   USER
+}
+
+// Book table
+model Book {
+  id        String   @id @default(cuid())
+  isbn      String   @unique
+  name      String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  entries   Entry[]  // relation to all entries for this book
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])      // fast lookup of books by user
+  @@index([isbn, userId]) // compound index if you query both
+}
+
+// Entry table
+model Entry {
+  id                  String   @id @default(cuid())
+  book                Book     @relation(fields: [bookId], references: [id])
+  bookId              String
+
+  openingStock        Int?
+  printedCopies       Int?
+  soldCopies          Int?
+  returnCopies        Int?
+  mrp                 Float?
+  amount              Float?
+  complimentaryDamage Int?
+  closingStock        Int?
+
+  fromDate            DateTime
+  toDate              DateTime
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([bookId])                 // fast lookup of entries for a book
+  @@index([fromDate, toDate])       // fast date range queries
+  @@index([bookId, fromDate, toDate]) // compound index for book + date range
 }
