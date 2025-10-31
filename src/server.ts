@@ -13,6 +13,7 @@ const app: Express = express();
 // );
 
 import authRoute from "./routes/auth.routes";
+import fileRoute from "./routes/file.routes";
 
 app.use(
   cors({
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 app.use("/api/auth", authRoute);
+app.use("/api/files", fileRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");

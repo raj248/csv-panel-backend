@@ -37,8 +37,22 @@ router.post("/login", async (req, res) => {
 });
 
 // -------------------- CHECK USER SESSION --------------------
-router.get("/check", verifyUser, (req, res) => {
-  return res.json({ success: true, data: { isUser: true } });
+router.get("/check", verifyUser, async (req, res) => {
+  const userId = (req as any).user_token;
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  if (user.role === "ADMIN") {
+    return res.json({ success: true, data: { isUser: true, isAdmin: true } });
+  }
+
+  return res.json({ success: true, data: { isUser: true, isAdmin: false } });
 });
 
 // -------------------- LOGOUT --------------------
@@ -59,7 +73,7 @@ router.post("/logout", (req, res) => {
 
 // new user creation
 router.post("/create-user", verifyAdmin, async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: "email and password are required" });
   }
@@ -75,6 +89,7 @@ router.post("/create-user", verifyAdmin, async (req, res) => {
 
   const newUser = await prisma.user.create({
     data: {
+      name,
       email,
       password: hashedPassword,
     },
@@ -158,6 +173,7 @@ router.get("/users", verifyAdmin, async (req, res) => {
   const users = await prisma.user.findMany({
     select: {
       id: true,
+      name: true,
       email: true,
       role: true,
       createdAt: true,
