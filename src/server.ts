@@ -14,6 +14,7 @@ const app: Express = express();
 
 import authRoute from "./routes/auth.routes";
 import fileRoute from "./routes/file.routes";
+import userRoute from "./routes/user.routes";
 
 app.use(
   cors({
@@ -29,6 +30,7 @@ app.use(morgan("dev"));
 
 app.use("/api/auth", authRoute);
 app.use("/api/files", fileRoute);
+app.use("/api/user", userRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
