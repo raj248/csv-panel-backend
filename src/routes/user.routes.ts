@@ -2,7 +2,10 @@
 import express, { Request, Response } from "express";
 import { verifyAdmin, verifyUser } from "../middleware/auth.middleware";
 import {
+  getAllBooks,
   getAllUserUploadEvents,
+  getBookEntriesByDateRange,
+  getUserBooks,
   getUserUploadEvents,
 } from "../controllers/user.controller";
 
@@ -23,6 +26,17 @@ router.get(
   }
 );
 
+router.get("/books", verifyUser, async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user_token;
+    const books = await getUserBooks(userId);
+    return res.status(200).json(books);
+  } catch (error) {
+    console.error("Error fetching user books:", error);
+    return res.status(500).json({ error: "Failed to fetch books" });
+  }
+});
+
 router.get(
   "/upload-events/all",
   verifyAdmin,
@@ -38,6 +52,42 @@ router.get(
       return res
         .status(500)
         .json({ error: "Failed to fetch all upload events" });
+    }
+  }
+);
+
+router.get("/books/all", verifyAdmin, async (req: Request, res: Response) => {
+  try {
+    const books = await getAllBooks();
+    return res.status(200).json(books);
+  } catch (error) {
+    console.error("Error fetching all books:", error);
+    return res.status(500).json({ error: "Failed to fetch all books" });
+  }
+});
+
+router.get(
+  "/data/:fromDate/:toDate",
+  verifyUser,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).user_token;
+      const { fromDate, toDate } = req.params;
+
+      const result = await getBookEntriesByDateRange(
+        userId,
+        new Date(fromDate),
+        new Date(toDate)
+      );
+
+      if (result.error) {
+        return res.status(500).json({ error: result.error });
+      }
+
+      return res.status(200).json({ success: true, data: result.data });
+    } catch (error) {
+      console.error("Error fetching user data by date range:", error);
+      return res.status(500).json({ error: "Failed to fetch data" });
     }
   }
 );
