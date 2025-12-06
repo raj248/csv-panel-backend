@@ -39,7 +39,7 @@ app.use((req, res) => {
   res.sendFile(path.join(process.cwd(), "public", "index.html"));
 });
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/healthz", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
