@@ -5,24 +5,24 @@ import path from "path";
 
 const app: Express = express();
 
-// app.use(
-//   cors({
-//     origin: "*", // your frontend origin
-//     methods: ["GET", "POST", "PUT", "DELETE"],
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: "*", // your frontend origin
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 import authRoute from "./routes/auth.routes";
 import fileRoute from "./routes/file.routes";
 import userRoute from "./routes/user.routes";
 
-app.use(
-  cors({
-    origin: true, // or your frontend IP/domain
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: true, // or your frontend IP/domain
+//     credentials: true,
+//   })
+// );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
