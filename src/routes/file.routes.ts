@@ -1,10 +1,10 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Router } from "express";
 import multer from "multer";
 import fs from "fs";
 import csvParser from "csv-parser";
 import { PrismaClient } from "@prisma/client";
 
-const router = express.Router();
+const router: Router = express.Router();
 const prisma = new PrismaClient();
 const upload = multer({ dest: "uploads/" });
 

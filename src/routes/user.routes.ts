@@ -1,5 +1,5 @@
 // user routes to read data
-import express, { Request, Response } from "express";
+import express, { Request, Response, Router } from "express";
 import { verifyAdmin, verifyUser } from "../middleware/auth.middleware";
 import {
   getAllBooks,
@@ -9,7 +9,7 @@ import {
   getUserUploadEvents,
 } from "../controllers/user.controller";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.get(
   "/upload-events",

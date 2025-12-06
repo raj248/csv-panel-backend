@@ -1,11 +1,11 @@
-import express from "express";
+import express, { Router } from "express";
 import { comparePassword, generateToken, hashPassword } from "../utils/auth";
 import * as cookie from "cookie";
 import { verifyAdmin, verifyUser } from "../middleware/auth.middleware";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-const router = express.Router();
+const router: Router = express.Router();
 
 // -------------------- LOGIN --------------------
 router.post("/login", async (req, res) => {
